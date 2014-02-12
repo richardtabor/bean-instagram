@@ -1,0 +1,19 @@
+FEB 12 2014 - Version 1.3
+<ul>
+<li>Added support for auto activation & updates</li>
+</ul>
+
+DEC 17 2013 - Version 1.2
+<ul>
+<li>Performance Improvements</li>
+</ul>
+
+AUG 12 2013 - Version 1.1
+<ul>
+<li>Performance Improvements</li>
+</ul>
+
+JULY 3 2013 - Version 1.0
+<ul>
+<li>Initial release</li>
+</ul>

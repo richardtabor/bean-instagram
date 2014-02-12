@@ -1,0 +1,111 @@
+/*--------------------------------------------------------------------*/
+/*  BEAN INSTAGRAM WIDGET - SPRUCE THEME
+/*--------------------------------------------------------------------*/
+div.widget.bean_instagram {
+    float: none;
+}
+
+.instagram-image-wrapper {
+     float: left;
+     margin-bottom: -7px;
+     margin-left: -7px;
+}
+
+.instagram_badge_image img {
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	        border-radius: 3px;
+}
+	
+.instagram_badge_image {
+    background: url(images/bean-instagram.png) #FFCC02 no-repeat 50% 50%;
+    float: left;
+    margin: 0 0 7px 7px;
+	-webkit-border-radius: 4px;
+	   -moz-border-radius: 4px;
+	        border-radius: 4px;
+}
+
+.instagram_badge_image a {
+    float: left;
+    position: relative;
+    -webkit-transition: all 0.15s;
+       -moz-transition: all 0.15s;
+    	-ms-transition: all 0.15s;
+    	 -o-transition: all 0.15s;
+    	  	transition: all 0.15s;
+}
+
+.instagram_badge_image a:hover {
+    opacity: .2;
+}
+
+.instagram_badge_image img {
+    float: left;
+    height: 61px;
+    width: 61px;
+}
+
+@media all and (-webkit-min-device-pixel-ratio: 1.5),
+(min-resolution: 192dpi) {	
+	.instagram_badge_image {
+		background-image: url(images/bean-instagram@2x.png);
+		background-size: 16px 16px;
+	}
+}	
+
+/*--------------------------------------------------------------------*/
+/*	iPAD/TABLET DEVICES GENERAL 
+/*--------------------------------------------------------------------*/	
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+	.sidebar .instagram_badge_image img {
+		height: 59px;
+		width: 59px;    
+		}	
+	.footer-widgets .instagram_badge_image img {
+		height: 82px;
+		width: 82px;    
+		}			
+}
+
+/*--------------------------------------------------------------------*/
+/*	iPAD PORTRAIT
+/*--------------------------------------------------------------------*/		
+@media only screen 
+and (min-device-width : 768px) 
+and (orientation : portrait){ 
+	.sidebar .instagram_badge_image img {
+		height: 46px;
+		width: 46px;    
+		}
+	.footer-widgets .instagram_badge_image img {
+		height: 53px;
+		width: 53px;    
+		}	
+}
+
+/*--------------------------------------------------------------------*/
+/*	iPHONE GENERAL / LANDSCAPE
+/*--------------------------------------------------------------------*/
+@media only screen 
+and (max-device-width: 320px)
+and (max-device-width : 480px) {
+	.footer-widgets .instagram_badge_image img {
+		height: 96px;
+		width: 96px;    
+		}
+}
+
+/*--------------------------------------------------------------------*/
+/*	iPHONE/SMARTPHONE PORTRAIT
+/*--------------------------------------------------------------------*/
+@media only screen 
+and (max-width : 320px)
+and (orientation : portrait) {
+	.footer-widgets .instagram_badge_image img {
+		height: 82px;
+		width: 82px;    
+		}		 
+}

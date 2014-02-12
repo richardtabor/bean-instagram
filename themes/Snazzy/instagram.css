@@ -1,0 +1,91 @@
+/*--------------------------------------------------------------------*/
+/*  BEAN INSTAGRAM WIDGET - SNAZZY THEME
+/*--------------------------------------------------------------------*/
+div.widget.bean_instagram {
+    float: none;
+}
+
+.instagram-image-wrapper {
+	margin: 8px 0 -7px -7px;
+}
+
+.instagram_badge_image,
+.instagram_badge_image a {
+	-webkit-transition: all 0.15s;
+	   -moz-transition: all 0.15s;
+		-ms-transition: all 0.15s;
+		 -o-transition: all 0.15s;
+		  	transition: all 0.15s;
+}	
+	  	
+.instagram_badge_image {
+	float: left;
+	margin: 0 0 7px 7px;  
+}
+
+.instagram_badge_image:hover {
+	 border-color: #FC6666;
+}
+
+.instagram_badge_image a { 
+    float: left;
+    position: relative; 
+    height: 62px!important;
+    width: 62px!important; 
+}
+
+.instagram_badge_image img {
+    float: left;
+    height: 62px!important;
+    width: 62px!important;
+}
+
+/* HOVER CSS */
+.instagram-image-wrapper:hover .instagram_badge_image { 
+	opacity: .5; 
+	-webkit-filter: grayscale(1);
+}
+
+.instagram-image-wrapper:hover .instagram_badge_image:hover  { 
+	opacity: 1.0; 
+	-webkit-filter: grayscale(0);
+}
+
+.instagram-image-wrapper {
+-webkit-animation-fill-mode: both;
+   -moz-animation-fill-mode: both;
+    -ms-animation-fill-mode: both;
+     -o-animation-fill-mode: both;
+        animation-fill-mode: both;
+-webkit-animation-duration: .5s;
+   -moz-animation-duration: .5s;
+    -ms-animation-duration: .5s;
+     -o-animation-duration: .5s;
+        animation-duration: .5s;
+-webkit-animation-delay: .2s;
+   -moz-animation-delay: .2s;
+    -ms-animation-delay: .2s;
+     -o-animation-delay: .2s;
+        animation-delay: .2s;
+-webkit-animation-name: BeanFadeIn;
+   -moz-animation-name: BeanFadeIn;
+     -o-animation-name: BeanFadeIn;
+        animation-name: BeanFadeIn;
+}
+	
+@-webkit-keyframes BeanFadeIn {
+	0% {opacity: 0;}	
+	100% {opacity: 1;}
+}
+@-moz-keyframes BeanFadeIn {
+	0% {opacity: 0;}	
+	100% {opacity: 1;}
+}
+@-o-keyframes BeanFadeIn {
+	0% {opacity: 0;}	
+	100% {opacity: 1;}
+}
+@keyframes BeanFadeIn {
+	0% {opacity: 0;}	
+	100% {opacity: 1;}
+}

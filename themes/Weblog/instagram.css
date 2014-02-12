@@ -1,0 +1,67 @@
+/*--------------------------------------------------------------------*/
+/*  BEAN INSTAGRAM WIDGET - WEBLOG THEME
+/*--------------------------------------------------------------------*/
+div.widget.bean_instagram {
+    float: none;
+}
+
+.instagram-image-wrapper {
+     float: left;
+     margin-bottom: -4px;
+     margin-left: -4px;
+}
+
+.instagram_badge_image img {
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	        border-radius: 3px;
+}
+	
+.instagram_badge_image {
+    background: url(images/bean-instagram.png) #3F729B no-repeat 50% 0%;
+    float: left;
+    margin: 0 0 4px 4px;
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	        border-radius: 3px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 2px rgba(0, 0, 0, 0.15);
+	   -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 2px rgba(0, 0, 0, 0.15);
+		    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 2px rgba(0, 0, 0, 0.15);
+	-webkit-transition: all .1s ease-in-out;
+	   -moz-transition: all .1s ease-in-out;
+	    -ms-transition: all .1s ease-in-out; 	   
+		 -o-transition: all .1s ease-in-out;
+	        transition: all .1s ease-in-out; 	              
+}
+
+.instagram_badge_image:hover {
+	background-position: 50% 50%;
+}
+
+.instagram_badge_image a {
+    float: left;
+    position: relative;
+    -webkit-transition: all 0.15s;
+       -moz-transition: all 0.15s;
+    	-ms-transition: all 0.15s;
+    	 -o-transition: all 0.15s;
+    	  	transition: all 0.15s;
+}
+
+.instagram_badge_image a:hover {
+    opacity: .2;
+}
+
+.instagram_badge_image img {
+    float: left;
+    height: 56px;
+    width: 56px;
+}
+
+@media all and (-webkit-min-device-pixel-ratio: 1.5),
+(min-resolution: 192dpi) {	
+	.instagram_badge_image {
+		background-image: url(images/bean-instagram@2x.png);
+		background-size: 16px 16px;
+	}
+}	

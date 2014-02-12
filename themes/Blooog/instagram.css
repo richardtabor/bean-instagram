@@ -1,0 +1,47 @@
+/*--------------------------------------------------------------------*/
+/*  BEAN INSTAGRAM WIDGET - BLOOOG THEME
+/*--------------------------------------------------------------------*/
+div.widget.bean_instagram {
+    float: none;
+}
+
+.instagram-image-wrapper {
+     float: left;
+     margin-bottom: -5px;
+     margin-left: -5px;
+}
+
+.instagram_badge_image img {
+	border: 5px solid #F4F4F6;
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	        border-radius: 3px;
+	-webkit-transition: all 0.3s;
+	   -moz-transition: all 0.3s;
+	 	-ms-transition: all 0.3s;
+		 -o-transition: all 0.3s;
+	 	  	transition: all 0.3s;        
+}
+	
+.instagram_badge_image {
+    float: left;
+    margin: 0 0 5px 5px;
+	-webkit-border-radius: 3px;
+	   -moz-border-radius: 3px;
+	        border-radius: 3px;
+}
+
+.instagram_badge_image a {
+    float: left;
+    position: relative;
+}
+
+.instagram_badge_image img:hover {
+    border-color: #FF4229;
+}
+
+.instagram_badge_image img {
+    float: left;
+    height: 80px;
+    width: 80px;
+}
