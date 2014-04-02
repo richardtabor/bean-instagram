@@ -55,8 +55,12 @@ class widget_bean_instagram extends WP_Widget {
 		extract($args);
 		if(!empty($instance['title'])){ $title = apply_filters( 'widget_title', $instance['title'] ); }
 
+        $desc = $instance['desc'];
+
 		echo $before_widget;
 		if ( ! empty( $title ) ){ echo $before_title . $title . $after_title; }
+
+        if($desc != '') : ?><p><?php echo $desc; ?></p><?php endif;
 
 		$accesstoken = self::getAccessToken();
 
@@ -211,6 +215,7 @@ class widget_bean_instagram extends WP_Widget {
 	public function update($new_instance, $old_instance) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
+        $instance['desc'] = stripslashes( $new_instance['desc'] );
 		$instance['clientid'] = strip_tags( $new_instance['clientid'] );
 		$instance['clientsecret'] = strip_tags( $new_instance['clientsecret'] );
 		$instance['cachetime'] = strip_tags( $new_instance['cachetime'] );
@@ -238,10 +243,11 @@ class widget_bean_instagram extends WP_Widget {
 	/*--------------------------------------------------------------------*/
 	public function form($instance) {
 		$defaults = array( 'title' => 'Bean Instagram Plugin',
-						   'clientid' => '',
-						   'clientsecret' => '',
-						   'cachetime' => '5',
-						   'show' => 'recent'
+                           'desc'  => '',
+                           'clientid' => '',
+                           'clientsecret' => '',
+                           'cachetime' => '5',
+                           'show' => 'recent'
 						 );
 
 		$instance = wp_parse_args( (array) $instance, $defaults );
@@ -304,6 +310,10 @@ class widget_bean_instagram extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'bean' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
+
+        <p style="margin-top: -8px;">
+            <textarea class="widefat" rows="5" cols="15" id="<?php echo $this->get_field_id( 'desc' ); ?>" name="<?php echo $this->get_field_name( 'desc' ); ?>"><?php echo $instance['desc']; ?></textarea>
+        </p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'clientid' ); ?>"><?php _e( 'Client ID:', 'bean' ); ?></label>
