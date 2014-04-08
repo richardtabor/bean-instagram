@@ -17,6 +17,29 @@ if ( !function_exists( 'add_action' ) ) {
 define('BEAN_INSTAGRAM_PATH', plugin_dir_url( __FILE__ ));
 
 
+/*===================================================================*/
+/*
+/* PLUGIN FEATURE SETUP
+/*
+/*===================================================================*/
+
+$bean_plugin_features[ plugin_basename( __FILE__ ) ] = array(
+        "updates"       => true    // Whether to utilize plugin updates feature or not
+    );
+
+
+if ( ! function_exists( 'bean_plugin_supports' ) ) {
+    function bean_plugin_supports( $plugin_basename, $feature ) {
+        global $bean_plugin_features;
+
+        $setup = $bean_plugin_features;
+
+        if( isset( $setup[$plugin_basename][$feature] ) && $setup[$plugin_basename][$feature] )
+            return true;
+        else
+            return false;
+    }
+}
 
 
 /*===================================================================*/
@@ -27,13 +50,18 @@ define('BEAN_INSTAGRAM_PATH', plugin_dir_url( __FILE__ ));
 define( 'EDD_BEANINSTAGRAM_TB_URL', 'http://themebeans.com' );
 define( 'EDD_BEANINSTAGRAM_NAME', 'Bean Instagram' );
 
+if ( bean_plugin_supports ( plugin_basename( __FILE__ ), 'updates' ) ) : // check to see if updates are allowed; only import if so
+
 //LOAD UPDATER CLASS
 if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) 
 {
-	include( dirname( __FILE__ ) . '/updates/EDD_SL_Plugin_Updater.php' );
+    include( dirname( __FILE__ ) . '/updates/EDD_SL_Plugin_Updater.php' );
 }
 //INCLUDE UPDATER SETUP
 include( dirname( __FILE__ ) . '/updates/EDD_SL_Activation.php' );
+
+
+endif; // END if ( bean_plugin_supports ( plugin_basename( __FILE__ ), 'updates' ) )
 
 
 /*===================================================================*/
@@ -48,6 +76,9 @@ add_action( 'init', 'beaninstagram_license_setup' );
 
 function edd_beaninstagram_plugin_updater() 
 {
+    // check to see if updates are allowed; don't do anything if not
+    if ( ! bean_plugin_supports ( plugin_basename( __FILE__ ), 'updates' ) ) return;
+    
 	//RETRIEVE LICENSE KEY
 	$license_key = trim( get_option( 'edd_beaninstagram_activate_license' ) );
 
