@@ -19,7 +19,7 @@ define('BEAN_INSTAGRAM_PATH', plugin_dir_url( __FILE__ ));
 
 /*===================================================================*/
 /*
-/* PLUGIN FEATURE SETUP
+/* PLUGIN FEATURES SETUP
 /*
 /*===================================================================*/
 
@@ -78,7 +78,7 @@ function edd_beaninstagram_plugin_updater()
 {
     // check to see if updates are allowed; don't do anything if not
     if ( ! bean_plugin_supports ( plugin_basename( __FILE__ ), 'updates' ) ) return;
-    
+
 	//RETRIEVE LICENSE KEY
 	$license_key = trim( get_option( 'edd_beaninstagram_activate_license' ) );
 
