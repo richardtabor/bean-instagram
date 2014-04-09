@@ -1,6 +1,6 @@
 ## Bean Instagram
 
-[Bean Instagram](http://themebeans.com/plugin/bean-instagram-plugin/) is a WordPress plugin by [ThemeBeans](http://themebeans.com) that adds an Instagram widget to Appearence > Widgets.
+[Bean Instagram](http://themebeans.com/plugin/bean-instagram-plugin/) is a WordPress plugin by [ThemeBeans](http://themebeans.com) that adds an Instagram widget to _Appearence > Widgets_.
 
 The widget can display your Instagram feed, recent uploads, or liked shots.
 
