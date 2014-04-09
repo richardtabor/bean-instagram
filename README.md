@@ -17,4 +17,4 @@ For more information, check out the [plugin page](http://themebeans.com/plugin/b
 
 1. Go to the _WordPress Dashboard > Appearance > Widgets_ screen.
 2. Drag/drop the _Bean Instagram_ widget to any of the widget areas.
-3. Follow (this)[http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code/] guide to retrieve your app codes.
+3. Follow [this](http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code/) guide to retrieve your app codes.
