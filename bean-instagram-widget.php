@@ -1,7 +1,7 @@
 <?php
 /*--------------------------------------------------------------------
 
- 	Widget Name: Bean Instagram Feed Widget
+ 	Widget Name: Bean Instagram Widget
  	Widget URI: http://themebeans.com/
  	Description:  A widget that displays your most recent Instagram posts, your Instagram feed or your liked posts on Instagram with API v1
  	Author: ThemeBeans
@@ -20,8 +20,8 @@ class widget_bean_instagram extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 	 		'bean_instagram', // BASE ID
-			'Bean Instagram (ThemeBeans)', // NAME
-			array( 'description' => __( 'A widget that displays your Instagram feed, posts, or likes', 'bean' ), )
+			'Bean Instagram', // NAME
+			array( 'description' => __( 'Displays your Instagram feed.', 'bean' ), )
 		);
 
 		if ( is_active_widget(false, false, $this->id_base) )
