@@ -6,7 +6,7 @@
  	Description:  A widget that displays your most recent Instagram posts, your Instagram feed or your liked posts on Instagram with API v1
  	Author: ThemeBeans
  	Author URI: http://www.themebeans.com
- 	Version: 1.1
+ 	Version: 1.0
 
 /*--------------------------------------------------------------------*/
 

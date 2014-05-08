@@ -22,14 +22,15 @@ define('BEAN_INSTAGRAM_PATH', plugin_dir_url( __FILE__ ));
 /* PLUGIN FEATURES SETUP
 /*
 /*===================================================================*/
-
 $bean_plugin_features[ plugin_basename( __FILE__ ) ] = array(
-        "updates"       => true    // Whether to utilize plugin updates feature or not
+        "updates"  => false // Whether to utilize plugin updates feature or not
     );
 
 
-if ( ! function_exists( 'bean_plugin_supports' ) ) {
-    function bean_plugin_supports( $plugin_basename, $feature ) {
+if ( ! function_exists( 'bean_plugin_supports' ) ) 
+{
+    function bean_plugin_supports( $plugin_basename, $feature ) 
+    {
         global $bean_plugin_features;
 
         $setup = $bean_plugin_features;
@@ -83,8 +84,8 @@ function edd_beaninstagram_plugin_updater()
 	$license_key = trim( get_option( 'edd_beaninstagram_activate_license' ) );
 
 	$edd_updater = new EDD_SL_Plugin_Updater( EDD_BEANINSTAGRAM_TB_URL, __FILE__, array( 
-			'version' 	=> '1.3',
-			'license' 	=> $license_key,
+			'version' => '1.3',
+			'license' => $license_key,
 			'item_name' => EDD_BEANINSTAGRAM_NAME,
 			'author' 	=> 'ThemeBeans'
 		)
