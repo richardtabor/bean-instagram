@@ -65,8 +65,8 @@ class widget_bean_instagram extends WP_Widget {
 		$accesstoken = self::getAccessToken();
 
 		// CHECK SETTINGS & DIE IF NOT SET
-		if(empty($instance['clientid']) || !$accesstoken || empty($instance['cachetime'])){
-			echo '<strong>Please fill all the widget settings and request an access token!</strong>' . $after_widget;
+		if(!$accesstoken || empty($instance['cachetime'])){
+			echo '<strong>Please fill all the widget settings under "Settings > Bean Instagram" and request an access token!</strong>' . $after_widget;
 			return;
 		}
 
@@ -131,8 +131,10 @@ class widget_bean_instagram extends WP_Widget {
 
 					if (@isset($result->data))
 					foreach($result->data as $post) {
+                        if (!is_object($post)) continue;
+
 						$post_entry = array(
-									"caption" => $post->caption == "null" ? "" : preg_replace('/[^(\x20-\x7F)]*/','', $post->caption->text),
+									"caption" => $post->caption == "null" ? "" : preg_replace('/[^(\x20-\x7F)]*/','', isset($post->caption->text) ? $post->caption->text : ''),
 									"link" => $post->link,
 									"image" => $post->images->thumbnail->url
 									);
@@ -144,7 +146,7 @@ class widget_bean_instagram extends WP_Widget {
 			}
 
 			// SAVE POSTS TO WP OPTION
-			if (@isset($posts_array)) {
+			if (isset($posts_array)) {
 				self::setPostsCache($posts_array);
 				self::setLastCacheTime(time());
 			}
@@ -216,22 +218,14 @@ class widget_bean_instagram extends WP_Widget {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
         $instance['desc'] = stripslashes( $new_instance['desc'] );
-		$instance['clientid'] = strip_tags( $new_instance['clientid'] );
-		$instance['clientsecret'] = strip_tags( $new_instance['clientsecret'] );
 		$instance['cachetime'] = strip_tags( $new_instance['cachetime'] );
 		$instance['show'] = strip_tags( $new_instance['show'] );
 
-		if($old_instance['clientid'] != $new_instance['clientid']
-		|| $old_instance['clientsecret'] != $new_instance['clientsecret']
-		|| $old_instance['show'] != $new_instance['show']
+		if($old_instance['show'] != $new_instance['show']
 		|| $old_instance['cachetime'] != $new_instance['cachetime'] ) {
 
 			// SET THE LAST CACHE TIME TO ZERO SO THAT THE POSTS ARE RE-CACHED
 			self::setLastCacheTime(0);
-
-			if ($old_instance['clientid'] != $new_instance['clientid']
-			|| $old_instance['clientsecret'] != $new_instance['clientsecret'])
-				self::deleteAccessToken();
 		}
 
 		return $instance;
@@ -244,67 +238,14 @@ class widget_bean_instagram extends WP_Widget {
 	public function form($instance) {
 		$defaults = array( 'title' => 'Bean Instagram Plugin',
                            'desc'  => '',
-                           'clientid' => '',
-                           'clientsecret' => '',
                            'cachetime' => '5',
                            'show' => 'recent'
 						 );
 
 		$instance = wp_parse_args( (array) $instance, $defaults );
 
-		$prefix = (!empty($_SERVER['HTTPS']) ? "https://" : "http://");
-		$uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
-		$redirectURI = $prefix . $_SERVER['HTTP_HOST'] . $uri_parts[0];
-
-		$code = $_GET['code'];
-
-		// Check if code parameter (from Instagram oauth) was passed and if so, get the access token from the Instagram API
-		$code_valid = $_GET['code'];
-
-		// Check if the code was sent for this object of the widget
-		$widget_id_valid = $_GET['widget_id'] == $this->id;
-
-		if ($code_valid && !self::getAccessToken() && $widget_id_valid) {
-			$ch = curl_init();
-
-			curl_setopt($ch, CURLOPT_URL, "https://api.instagram.com/oauth/access_token");
-			curl_setopt($ch, CURLOPT_POSTFIELDS, "client_id=" . $instance['clientid'] .
-												 "&client_secret=" . $instance['clientsecret'] .
-												 "&grant_type=authorization_code" .
-												 "&redirect_uri=" . urlencode($redirectURI . "?widget_id=" . $this->id) .
-												 "&code=" . $code );
-
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-			$result = curl_exec($ch);
-
-			curl_close($ch);
-
-			// JSON decode the result
-			$result = json_decode($result);
-
-			if (isset($result->access_token)) {
-				self::setAccessToken($result->access_token);
-				self::setUserId($result->user->id);
-			}
-		}
-
-		// Retrieve the accesstoken
-		$accesstoken = self::getAccessToken();
 
 		?>
-
-		<p style="margin-bottom: 25px;">This widget requires that you register an application on the <a href="http://instagram.com/developer" target="blank">Instagram Developer</a> page in order to access your feed. <br><a href="http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code/?ref=plugin_bean_instagram" target="blank">Find Out More</a> 
-
-		<?php if (!isset($accesstoken) || empty($accesstoken)) { ?>
-		
-			<br><br>
-			<label>Redirect URI:</label><br>
-			<span style="color: #797979;">When registering your app, set the Redirect URI field to the following: "<?php echo get_admin_url(); ?>widgets.php"</span>
-		
-		<?php } ?>
-
-		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'bean' ); ?></label>
@@ -314,58 +255,6 @@ class widget_bean_instagram extends WP_Widget {
         <p style="margin-top: -8px;">
             <textarea class="widefat" rows="5" cols="15" id="<?php echo $this->get_field_id( 'desc' ); ?>" name="<?php echo $this->get_field_name( 'desc' ); ?>"><?php echo $instance['desc']; ?></textarea>
         </p>
-
-		<p>
-			<label for="<?php echo $this->get_field_id( 'clientid' ); ?>"><?php _e( 'Client ID:', 'bean' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'clientid' ); ?>" name="<?php echo $this->get_field_name( 'clientid' ); ?>" type="text" value="<?php echo esc_attr( $instance['clientid'] ); ?>" />
-		</p>
-
-		<p>
-			<label for="<?php echo $this->get_field_id( 'clientsecret' ); ?>"><?php _e( 'Client Secret:', 'bean' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'clientsecret' ); ?>" name="<?php echo $this->get_field_name( 'clientsecret' ); ?>" type="text" value="<?php echo esc_attr( $instance['clientsecret'] ); ?>" />
-		</p>
-
-		<p>
-			<label><?php _e( 'Access Token: ', 'bean' ); ?></label>
-			<?php
-
-			if ( empty($accesstoken) ) {
-			?>
-				<span style="color: red;">Not available.</span>
-		
-				<br>
-				<br>
-
-				<?php
-				if (empty($instance['clientid']) || empty($instance['clientsecret'] ) ) {
-				?>
-					<span style="color: #797979;">Please set the "Client ID" and "Client Secret" fields and press save to retrieve the access token.</span>
-					<br>
-					<br>
-
-				<?php
-				} else {
-
-				$button_id = "getaccesstoken_" . rand();
-
-				?>	
-					<label><a href="javascript:void(0)" id="<?php echo $button_id; ?>">Get Access Token</a></label>
-
-					<br>
-					<span style="color: #797979;">Click to retrieve your access token.</span>
-
-				<?php
-				}
-				?>
-
-			<?php
-			} else {
-			?>
-				<label><span style="color: green;">Available</span></label>
-			<?php
-			}
-			?>
-		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'show' ); ?>"><?php _e('Show:', 'bean'); ?></label>
@@ -379,111 +268,31 @@ class widget_bean_instagram extends WP_Widget {
 		<p><label for="<?php echo $this->get_field_id( 'cachetime' ); ?>"><?php _e( 'Cache every:', 'bean' ); ?></label>
 			<input type="text" name="<?php echo $this->get_field_name( 'cachetime' ); ?>" id="<?php echo $this->get_field_id( 'cachetime' ); ?>" value="<?php echo esc_attr($instance['cachetime']) ?>" class="small-text" /> hours</p>
 
-
-		<script type="text/javascript">
-			var getAccessTokenButton = document.getElementById('<?php echo $button_id; ?>');
-			var newWindow = null;
-			var timer = null;
-
-			if (getAccessTokenButton)
-			getAccessTokenButton.addEventListener('click', function(event) {
-				var clientid = "<?php echo $instance['clientid']; ?>";
-				var redirect_uri = window.location.href;
-				redirect_uri = redirect_uri.indexOf('?') > -1 ? redirect_uri.split('?')[0] : redirect_uri;
-				redirect_uri += "?widget_id=<?php echo $this->id; ?>";
-
-	            var form = document.createElement("form");
-	            form.setAttribute('id', 'instagram_auth');
-	            form.setAttribute('name', 'instagram_auth');
-	            form.setAttribute('action', 'https://api.instagram.com/oauth/authorize/');
-	            form.setAttribute('method', 'GET');
-
-	            var responseType = document.createElement('input');
-	            responseType.setAttribute('type', 'hidden');
-	            responseType.setAttribute('name', 'response_type');
-	            responseType.setAttribute('value', 'code');
-	            responseType.setAttribute('id', 'instagram_auth_response_type');
-
-	            var redirectURI = document.createElement('input');
-	            redirectURI.setAttribute('type', 'hidden');
-	            redirectURI.setAttribute('name', 'redirect_uri');
-	            redirectURI.setAttribute('value', redirect_uri);
-	            redirectURI.setAttribute('id', 'instagram_auth_redirect_uri');
-
-	            var clientID = document.createElement('input');
-	            clientID.setAttribute('type', 'hidden');
-	            clientID.setAttribute('name', 'client_id');
-	            clientID.setAttribute('value', clientid);
-	            clientID.setAttribute('id', 'instagram_auth_client_id');
-
-	            form.appendChild(responseType);
-	            form.appendChild(redirectURI);
-	            form.appendChild(clientID);
-
-				form.submit();
-
-				event.preventDefault();
-				return false;
-			});
-
-			function instagram_authentication_timer() {
-				try {
-					if (typeof newWindow.closeWindow == "function") {
-						newWindow.closeWindow();
-						clearInterval(timer);
-						self.location.reload(true);
-					}
-				} catch(e) {}
-
-				if (newWindow.closed) {
-					clearInterval(timer);
-					self.location.reload(true);
-				}
-			}
-
-		</script>
-
 		<?php
 	}
 
+    /*--------------------------------------------------------------------*/
+    /*  SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM ACCESS TOKEN
+    /*--------------------------------------------------------------------*/
 
-	/*--------------------------------------------------------------------*/
-	/*	SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM ACCESS TOKEN
-	/*--------------------------------------------------------------------*/
+    private function getAccessToken() {
+        return get_option('bean_inst_access_token');
+    }
 
-	// GET THE ACCESS TOKEN OF THE CURRENT INSTAGRAM PLUGIN OBJECT DEPENDING ON THE ID
-	private function getAccessToken() {
-		$return_access_token = get_option('ip_instagram_plugin_accesstoken_' . $this->id);
+    /*--------------------------------------------------------------------*/
+    /*  SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM ACCESS TOKEN
+    /*--------------------------------------------------------------------*/
 
-		if (isset($return_access_token) && !empty($return_access_token))
-		return $return_access_token;
-
-		return false;
-	}
-
-	// SET THE ACCESS TOKEN OF THE CURRENT INSTAGRAM PLUGIN OBJECT DEPENDING ON THE ID
-	private function setAccessToken($accesstoken) {
-		update_option('ip_instagram_plugin_accesstoken_' . $this->id, $accesstoken);
-	}
-
-	// DELETE THE ACCESS TOKEN OF THE CURRENT INSTAGRAM PLUGIN OBJECT DEPENDING ON THE ID
-	private function deleteAccessToken() {
-		delete_option('ip_instagram_plugin_accesstoken_' . $this->id);
-	}
-
+    private function getClientId() {
+        return get_option('bean_inst_client_id');
+    }
 
 	/*--------------------------------------------------------------------*/
 	/*	SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM USER ID
 	/*--------------------------------------------------------------------*/
 
-	// GET THE USER ID OF THE CURRENT INSTAGRAM PLUGIN OBJECT DEPENDING ON THE ID
 	private function getUserId() {
-		return get_option('ip_instagram_plugin_userid_' . $this->id);
-	}
-
-	// SET THE USER ID OF THE CURRENT INSTAGRAM PLUGIN OBJECT DEPENDING ON THE ID
-	private function setUserId($userid) {
-		update_option('ip_instagram_plugin_userid_' . $this->id, $userid);
+		return get_option('bean_inst_plugin_userid');
 	}
 
 
@@ -493,12 +302,12 @@ class widget_bean_instagram extends WP_Widget {
 
 	// GET THE INSTAGRAM POSTS CACHE
 	private function getPostsCache() {
-		return get_option('ip_instagram_plugin_posts_' . $this->id);
+		return get_option('bean_inst_plugin_posts_' . $this->id);
 	}
 
 	// SET THE INSTAGRAM POSTS CACHE
 	private function setPostsCache($cache) {
-		update_option('ip_instagram_plugin_posts_' . $this->id, $cache);
+		update_option('bean_inst_plugin_posts_' . $this->id, $cache);
 	}
 
 
@@ -508,12 +317,12 @@ class widget_bean_instagram extends WP_Widget {
 
 	// GET THE LAST CACHE TIME DEPENDING ON THE ID
 	private function getLastCacheTime() {
-		return get_option('ip_instagram_plugin_last_cache_time_' . $this->id);
+		return get_option('bean_inst_plugin_last_cache_time_' . $this->id);
 	}
 
 	// SET THE LAST CACHE TIME DEPENDING ON THE ID
 	private function setLastCacheTime($time) {
-		update_option('ip_instagram_plugin_last_cache_time_' . $this->id, $time);
+		update_option('bean_inst_plugin_last_cache_time_' . $this->id, $time);
 	}
 
 }
@@ -528,10 +337,10 @@ function my_sidebar_admin_setup() {
           if ( isset( $_POST['delete_widget'] ) ) {
                if ( 1 === (int) $_POST['delete_widget'] ) {
                     if ( strpos($widget_id, 'bean_instagram') !== FALSE ) {
-						delete_option('ip_instagram_plugin_accesstoken_' . $widget_id);
-						delete_option('ip_instagram_plugin_last_cache_time_' . $widget_id);
-						delete_option('ip_instagram_plugin_posts_' . $widget_id);
-						delete_option('ip_instagram_plugin_userid_' . $widget_id);
+						delete_option('bean_inst_plugin_accesstoken_' . $widget_id);
+						delete_option('bean_inst_plugin_last_cache_time_' . $widget_id);
+						delete_option('bean_inst_plugin_posts_' . $widget_id);
+						delete_option('bean_inst_plugin_userid_' . $widget_id);
                     }
                }
           }
@@ -546,6 +355,227 @@ function register_ip_instagram_widget(){
 }
 add_action('init', 'register_ip_instagram_widget', 1);
 add_action( 'sidebar_admin_setup', 'my_sidebar_admin_setup' );
+
+
+
+
+
+/**
+ * Widget Settings Admin Page Output.
+ * This section adds a "Bean Instagram" menu to the Settings dashboard link.
+ *  
+ *   
+ * @package WordPress
+ * @subpackage Bean Instagram
+ * @author ThemeBeans
+ * @since Bean Instagram 1.4
+ */
+ 
+/*===================================================================*/
+/*  CREATE ADMIN LINK
+/*===================================================================*/ 
+function bean_instagram_options_page_settings() 
+{
+    add_options_page(
+        __('Instagram Settings', 'bean'), __('Bean Instagram', 'bean'), 'manage_options', 'bean-instagram-plugin-settings', 'bean_instagram_admin_page'
+    );
+} //END bean_instagram_options_page_settings
+
+add_action( 'admin_menu', 'bean_instagram_options_page_settings' );
+
+
+/*===================================================================*/
+/*  LOAD ADMIN JS
+/*===================================================================*/ 
+function bean_instagram_enqueue_scripts($hook)  {
+
+    if ('settings_page_bean-instagram-plugin-settings' !== $hook) return;
+
+    wp_enqueue_script( 'bean-instagram-script', BEAN_INSTAGRAM_PATH . 'js/bean-instagram.js', array(), '1.0', true );
+} //END bean_instagram_enqueue_scripts
+
+add_action( 'admin_enqueue_scripts', 'bean_instagram_enqueue_scripts' );
+
+
+/*===================================================================*/
+/*  REGISTER SETTINGS
+/*===================================================================*/  
+add_action('admin_init', 'bean_instagram_register_settings');
+
+function bean_instagram_settings() {
+    $bean_inst = array();
+    $bean_inst[] = array('label' => 'Client ID:', 'name' => 'bean_inst_client_id');
+    $bean_inst[] = array('label' => 'Client Secret:', 'name' => 'bean_inst_client_secret');
+    $bean_inst[] = array('label' => 'Access Token:', 'name' => 'bean_inst_access_token', 'render' => false);
+    $bean_inst[] = array('label' => 'User ID:', 'name' => 'bean_inst_plugin_userid', 'render' => false);
+
+    return $bean_inst;
+} //END bean_instagram_settings
+
+function bean_instagram_register_settings() {
+    $settings = bean_instagram_settings();
+    foreach($settings as $setting) {
+        register_setting('bean_instagram_settings', $setting['name'], isset($setting['sanitize_callback']) ? $setting['sanitize_callback'] : '');
+    }
+} //END bean_instagram_register_settings
+
+
+
+/*===================================================================*/
+/*  DELETE SETTINGS WHEN THE PLUGIN IS DEACTIVATED
+/*===================================================================*/  
+
+function bean_instagram_delete_plugin_options() {
+    $settings = bean_instagram_settings();
+    foreach($settings as $setting) {
+        delete_option($setting['name']);
+    }
+}
+
+register_deactivation_hook( BEAN_INSTAGRAM_PLUGIN_FILE, 'bean_instagram_delete_plugin_options' );
+
+
+/*===================================================================*/
+/*  CREATE THE SETTINGS PAGE
+/*===================================================================*/  
+function bean_instagram_admin_page($id) 
+{
+    if( !current_user_can('manage_options') ) { wp_die( __('Insufficient permissions', 'bean') ); }
+
+    $settings = bean_instagram_settings();
+
+    $settings_updated = isset($_GET['settings-updated']);
+
+    $prefix = (!empty($_SERVER['HTTPS']) ? "https://" : "http://");
+    $uri_parts = explode('?', $_SERVER['REQUEST_URI'], 2);
+    $redirectURI = $prefix . $_SERVER['HTTP_HOST'] . $uri_parts[0] . '?page=bean-instagram-plugin-settings';
+
+    $code = isset($_GET['code']) ? $_GET['code'] : '';
+
+    // Check if code parameter (from Instagram oauth) was passed and if so, get the access token from the Instagram API
+    $code_valid = isset($_GET['code']) ? $_GET['code'] : '';
+
+    if ($code_valid && !isset($_GET['settings-updated']) ) {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.instagram.com/oauth/access_token");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "client_id=" . get_option('bean_inst_client_id') .
+                                             "&client_secret=" . get_option('bean_inst_client_secret') .
+                                             "&grant_type=authorization_code" .
+                                             "&redirect_uri=" . urlencode($redirectURI) .
+                                             "&code=" . $code );
+
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_REFERER, $redirectURI);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        // JSON decode the result
+        $result = json_decode($result);
+
+        if (isset($result->access_token)) {
+            $accesstoken_value = $result->access_token;
+            $userid_value = $result->user->id;
+        }
+    }
+
+    echo '<div class="wrap">';
+        screen_icon();
+        echo '<h2>Bean Instagram Plugin</h2>';
+        echo '<div class="wrap">'; 
+        echo '<p>' . __('Display the photos of people you follow on <a href="http://instagram.com" target="_blank">Instagram</a>, or the one\'s that you\'ve uploaded yourself, or the one\'s that you\'ve liked.<br><br>Follow the steps below to get started. You can also check out our more <a href="http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code/">detailed tutorial</a> on how to set things up. Cheers!', 'bean' ) . '</p></br>';
+        ?>
+            <?php
+            echo '<form method="post" action="options.php">';
+                
+                
+                
+                echo '<h4 style="font-size: 15px; font-weight: 600; color: #222; margin-bottom: 10px;">' . __('How To', 'bean' ) . '</h4>';
+                echo '<ol>';
+                    echo '<li>' . __( 'Header over to the Instagram Developer page: ', 'bean' ) . '<a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a></li>';
+                    /* translators: Click is used as a verb. */
+                    printf( '<li>' . __( 'Click %1$s at the top bar.', 'bean' ) . '</li>', "<strong>Manage Clients</strong>");
+                    /* translators: Click is used as a verb. */
+                    printf( '<li>' . __( 'Click %1$s.', 'bean' ) . '</li>', "<strong>Register a New Client</strong>");
+                    printf( '<li>' . __( 'Fill in all the information. Set the %1$s field exactly equal to: %2$s', 'bean' ) . '</li>' , "<strong>OAuth redirect_uri</strong>", "<strong>$redirectURI</strong>");
+                    echo '<li style="margin-bottom: 20px;">' . __( 'Complete the registration.', 'bean' ) . '</li>';
+                    printf( '<li>' . __( 'Copy/paste the %1$s and %2$s values of your Instagram Client in the fields below.', 'bean' ) . '</li>', "<strong>Client ID</strong>", "<strong>Client Secret</strong>" );
+                    /* translators: Click the "Save Changes" button below. */
+                    printf( '<li style="margin-bottom: 20px;">' . __( 'Click the %1$s button below.', 'bean' ) . '</li>', "<strong>" . __( 'Save Changes' ) . "</strong>" );
+                    /* translators: Click the "Get the Access Token" button below. */
+                    printf( '<li>' . __( 'Click the %1$s button below.', 'bean' ) . '</li>', '<strong>' . __( 'Get the Access Token', 'bean' ) . '</strong>' );
+                    /* translators: Click the "Save Changes" button below again. */
+                    printf( '<li style="margin-bottom: 20px;">' . __( 'Click the %1$s button below again.', 'bean' ) . '</li>', "<strong>" . __( 'Save Changes' ) . "</strong>" );
+                    printf( '<li>' . __( 'Add the %1$s widget to a widget area in your %2$s.', 'bean' ) . '</li>', '<strong>Bean Instagram</strong>', '<a href="widgets.php"><strong>' . __( 'Widgets Dashboard' ) . '</strong></a>' );
+                echo '</ol></br>';
+    
+                settings_fields('bean_instagram_settings');
+                
+                echo '<h4 style="font-size: 15px; font-weight: 600; color: #222; margin-bottom: 7px;">' . __('OAuth Codes', 'bean' ) . '</h4>';
+                
+                echo '<table>';
+                    foreach($settings as $setting) {
+                        if (isset($setting['render']) && $setting['render'] === false) continue;
+
+                        echo '<tr>';
+                            echo '<td style="padding-right: 20px;">' . $setting['label'] . '</td>';
+                            echo '<td><input type="text" style="width:500px;" name="'.$setting['name'].'" id="'.$setting['name'].'" value="'.get_option($setting['name']).'" onchange="clear_accesstoken(\'' . sprintf( __( 'Not available! Kindly click %1$s after entering the Client ID above.', 'bean'), __( 'Save Changes' ) ) . '\');"></td>';
+                        echo '</tr>';
+                    }
+
+                    echo '<tr>';
+                        echo '<td style="padding: 0 20px 0 0;">' . __('Access Token', 'bean') . '</td>';
+                        echo '<td style="padding: 30px 0;">';
+
+                        $stored_accesstoken = get_option("bean_inst_access_token", "");
+                        $stored_userid = get_option("bean_inst_plugin_userid", "");
+
+                        if (empty($stored_accesstoken) && !isset($accesstoken_value)) {
+                            $client_id_value = get_option('bean_inst_client_id');
+
+                            if (!$code_valid && empty($client_id_value)) {
+                                echo '<strong style="color: red;">';
+                                printf( __( 'Not available! Kindly click %1$s after entering the Client ID above.', 'bean'), __( 'Save Changes' ) );
+                                echo '</strong>';
+                            } else {
+                                echo '<input type="button" class="button" onclick="bean_instagram_get_access_token.call(this, \'' . $redirectURI . '\'); return false;" value="' . __( 'Get the Access Token', 'bean' ) . '">';
+
+                                if ($code_valid && !isset($accesstoken_value)) {
+                                    echo "<strong style='padding-left: 10px; line-height: 28px;'>";
+                                    echo __("There was some error while trying to retrieve the access token. Make sure that the Redirect URI in your Instagram API Client is set to exactly what is suggested above.", 'bean');
+                                    echo "</strong>";
+                                }
+                            }
+
+                        } else {
+                            echo '<strong id="bean_inst_access_token_status" style="color: green;">Available';
+
+                            if (empty($stored_accesstoken)) {
+                                echo ' – ';
+                                echo __('Click "Save Changes" below to save the Access Token. (It will be lost otherwise.)', 'bean');
+                            }
+
+                            echo '</strong>';
+                        }
+
+                        echo '<input type="hidden" id="bean_inst_access_token" name="bean_inst_access_token" value="' . (isset($accesstoken_value) ? $accesstoken_value : $stored_accesstoken).'">';
+
+                        echo '<input type="hidden" id="bean_inst_plugin_userid" name="bean_inst_plugin_userid" value="' . (isset($userid_value) ? $userid_value : $stored_userid).'">';
+
+                        echo '</td>';
+                    echo '</tr>';
+
+                echo '</table>';
+    
+                submit_button();
+    
+            echo '</form>';
+        echo '</div>';
+    echo '</div>';
+} //END bean_instagram_admin_page
 
 
 ?>
