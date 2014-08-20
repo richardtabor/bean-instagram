@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Bean Instagram
-Plugin URI: http://themebeans.com/plugin/bean-instagram-plugin/?ref=plugin_bean_instagram
+Plugin URI: http://themebeans.com/plugin/bean-instagram-plugin
 Description: Enables an Instagram feed widget. You must register an <a href="http://instagram.com/developer/" target="_blank">Instagram App</a> to retrieve your client ID and secret. <a href="http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code">Learn More</a>
 Version: 1.4
 Author: ThemeBeans
-Author URI: http://www.themebeans.com/?ref=plugin_bean_instagram
+Author URI: http://www.themebeans.com
 */
 
 // DON'T CALL ANYTHING
@@ -44,6 +44,8 @@ if ( ! function_exists( 'bean_plugin_supports' ) )
 }
 
 
+
+
 /*===================================================================*/
 /*
 /* PLUGIN UPDATER FUNCTIONALITY
@@ -64,6 +66,8 @@ include( dirname( __FILE__ ) . '/updates/EDD_SL_Activation.php' );
 
 
 endif; // END if ( bean_plugin_supports ( plugin_basename( __FILE__ ), 'updates' ) )
+
+
 
 
 /*===================================================================*/
@@ -95,6 +99,8 @@ function edd_beaninstagram_plugin_updater()
 add_action( 'admin_init', 'edd_beaninstagram_plugin_updater' );
 
 
+
+
 /*===================================================================*/
 /* DEACTIVATION HOOK - REMOVE OPTION
 /*===================================================================*/
@@ -108,15 +114,8 @@ register_deactivation_hook( __FILE__, 'beaninstagram_deactivate' );
 
 
 
-
-
-
-
 /*===================================================================*/
-/*
-/* BEGIN BEAN SOCIAL PLUGIN
-/*
+/* BEGIN BEAN INSTAGRAM PLUGIN
 /*===================================================================*/
-// INCLUDE WIDGET
 require_once('bean-instagram-widget.php');
 ?>

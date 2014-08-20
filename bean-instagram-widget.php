@@ -8,15 +8,15 @@
  	Author URI: http://www.themebeans.com
  	Version: 1.0
 
-/*--------------------------------------------------------------------*/
+/*===================================================================*/
 
 
 // WIDGET CLASS
 class widget_bean_instagram extends WP_Widget {
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	WIDGET SETUP
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	public function __construct() {
 		parent::__construct(
 	 		'bean_instagram', // BASE ID
@@ -28,9 +28,9 @@ class widget_bean_instagram extends WP_Widget {
             add_action( 'wp_head', array(&$this, 'load_widget_style') );
 	}
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	LOAD WIDGET STYLE DEPENDING ON THE THEME ( OR DEFAULT IF NO ASSOCIATED STYLE WAS FOUND )
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 
 	public function load_widget_style() {
 		$current_theme = wp_get_theme();
@@ -48,9 +48,9 @@ class widget_bean_instagram extends WP_Widget {
 			wp_enqueue_style( 'bean-instagram-style', $default_css_url, false, '1.0', 'all' );
 	}
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	DISPLAY WIDGET
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	public function widget($args, $instance) {
 		extract($args);
 		if(!empty($instance['title'])){ $title = apply_filters( 'widget_title', $instance['title'] ); }
@@ -211,9 +211,9 @@ class widget_bean_instagram extends WP_Widget {
 	}
 
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	UPDATE WIDGET
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	public function update($new_instance, $old_instance) {
 		$instance = array();
 		$instance['title'] = strip_tags( $new_instance['title'] );
@@ -232,9 +232,9 @@ class widget_bean_instagram extends WP_Widget {
 	}
 
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	WIDGET SETTINGS (FRONT END PANEL)
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	public function form($instance) {
 		$defaults = array( 'title' => 'Bean Instagram Plugin',
                            'desc'  => '',
@@ -271,34 +271,34 @@ class widget_bean_instagram extends WP_Widget {
 		<?php
 	}
 
-    /*--------------------------------------------------------------------*/
+    /*===================================================================*/
     /*  SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM ACCESS TOKEN
-    /*--------------------------------------------------------------------*/
+    /*===================================================================*/
 
     private function getAccessToken() {
         return get_option('bean_inst_access_token');
     }
 
-    /*--------------------------------------------------------------------*/
+    /*===================================================================*/
     /*  SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM ACCESS TOKEN
-    /*--------------------------------------------------------------------*/
+    /*===================================================================*/
 
     private function getClientId() {
         return get_option('bean_inst_client_id');
     }
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM USER ID
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 
 	private function getUserId() {
 		return get_option('bean_inst_plugin_userid');
 	}
 
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM POSTS CACHE
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 
 	// GET THE INSTAGRAM POSTS CACHE
 	private function getPostsCache() {
@@ -311,9 +311,9 @@ class widget_bean_instagram extends WP_Widget {
 	}
 
 
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 	/*	SUPPORT FUNCTIONS TO HANDLE THE INSTAGRAM FEED LAST CACHE TIME
-	/*--------------------------------------------------------------------*/
+	/*===================================================================*/
 
 	// GET THE LAST CACHE TIME DEPENDING ON THE ID
 	private function getLastCacheTime() {
@@ -486,7 +486,7 @@ function bean_instagram_admin_page($id)
         screen_icon();
         echo '<h2>Bean Instagram Plugin</h2>';
         echo '<div class="wrap">'; 
-        echo '<p>' . __('Display the photos of people you follow on <a href="http://instagram.com" target="_blank">Instagram</a>, or the one\'s that you\'ve uploaded yourself, or the one\'s that you\'ve liked.<br><br>Follow the steps below to get started. You can also check out our more <a href="http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code/">detailed tutorial</a> on how to set things up. Cheers!', 'bean' ) . '</p></br>';
+        echo '<p>' . __('Display your Instagram photostream with the Bean Instagram Plugin. Follow the steps below to get started. You can also check out our more <a href="http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code/">detailed tutorial</a> on how to set things up. Cheers!', 'bean' ) . '</p></br>';
         ?>
             <?php
             echo '<form method="post" action="options.php">';
@@ -495,20 +495,20 @@ function bean_instagram_admin_page($id)
                 
                 echo '<h4 style="font-size: 15px; font-weight: 600; color: #222; margin-bottom: 10px;">' . __('How To', 'bean' ) . '</h4>';
                 echo '<ol>';
-                    echo '<li>' . __( 'Header over to the Instagram Developer page: ', 'bean' ) . '<a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a></li>';
+                    echo '<li>' . __( 'Go to the Instagram Developer page: ', 'bean' ) . '<a href="http://instagram.com/developer" target="_blank">http://instagram.com/developer</a></li>';
                     /* translators: Click is used as a verb. */
                     printf( '<li>' . __( 'Click %1$s at the top bar.', 'bean' ) . '</li>', "<strong>Manage Clients</strong>");
                     /* translators: Click is used as a verb. */
                     printf( '<li>' . __( 'Click %1$s.', 'bean' ) . '</li>', "<strong>Register a New Client</strong>");
                     printf( '<li>' . __( 'Fill in all the information. Set the %1$s field exactly equal to: %2$s', 'bean' ) . '</li>' , "<strong>OAuth redirect_uri</strong>", "<strong>$redirectURI</strong>");
-                    echo '<li style="margin-bottom: 20px;">' . __( 'Complete the registration.', 'bean' ) . '</li>';
+                    echo '<li>' . __( 'Complete the registration.', 'bean' ) . '</li>';
                     printf( '<li>' . __( 'Copy/paste the %1$s and %2$s values of your Instagram Client in the fields below.', 'bean' ) . '</li>', "<strong>Client ID</strong>", "<strong>Client Secret</strong>" );
                     /* translators: Click the "Save Changes" button below. */
-                    printf( '<li style="margin-bottom: 20px;">' . __( 'Click the %1$s button below.', 'bean' ) . '</li>', "<strong>" . __( 'Save Changes' ) . "</strong>" );
+                    printf( '<li>' . __( 'Click the %1$s button below.', 'bean' ) . '</li>', "<strong>" . __( 'Save Changes' ) . "</strong>" );
                     /* translators: Click the "Get the Access Token" button below. */
                     printf( '<li>' . __( 'Click the %1$s button below.', 'bean' ) . '</li>', '<strong>' . __( 'Get the Access Token', 'bean' ) . '</strong>' );
                     /* translators: Click the "Save Changes" button below again. */
-                    printf( '<li style="margin-bottom: 20px;">' . __( 'Click the %1$s button below again.', 'bean' ) . '</li>', "<strong>" . __( 'Save Changes' ) . "</strong>" );
+                    printf( '<li>' . __( 'Click the %1$s button below again.', 'bean' ) . '</li>', "<strong>" . __( 'Save Changes' ) . "</strong>" );
                     printf( '<li>' . __( 'Add the %1$s widget to a widget area in your %2$s.', 'bean' ) . '</li>', '<strong>Bean Instagram</strong>', '<a href="widgets.php"><strong>' . __( 'Widgets Dashboard' ) . '</strong></a>' );
                 echo '</ol></br>';
     
@@ -527,7 +527,7 @@ function bean_instagram_admin_page($id)
                     }
 
                     echo '<tr>';
-                        echo '<td style="padding: 0 20px 0 0;">' . __('Access Token', 'bean') . '</td>';
+                        echo '<td style="padding: 0 20px 0 0;">' . __('Access Token:', 'bean') . '</td>';
                         echo '<td style="padding: 30px 0;">';
 
                         $stored_accesstoken = get_option("bean_inst_access_token", "");
