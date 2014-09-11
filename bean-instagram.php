@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Bean Instagram
-Plugin URI: http://themebeans.com/plugin/bean-instagram-plugin
-Description: Enables an Instagram feed widget. You must register an <a href="http://instagram.com/developer/" target="_blank">Instagram App</a> to retrieve your client ID and secret. <a href="http://themebeans.com/registering-your-instagram-app-to-retrieve-your-client-id-secret-code">Learn More</a>
-Version: 1.4
+Plugin URI: http://themebeans.com/plugins/bean-instagram
+Description: Enables an Instagram feed widget. You must register an <a href="http://instagram.com/developer/" target="_blank">Instagram App</a> to retrieve your client ID and secret. <a href="http://themebeans.com/tutorials/retrieving-your-instagram-id-secret/">Learn More</a>
+Version: 2.0
 Author: ThemeBeans
-Author URI: http://www.themebeans.com
+Author URI: http://themebeans.com
 */
 
 // DON'T CALL ANYTHING
@@ -89,7 +89,7 @@ function edd_beaninstagram_plugin_updater()
 	$license_key = trim( get_option( 'edd_beaninstagram_activate_license' ) );
 
 	$edd_updater = new EDD_SL_Plugin_Updater( EDD_BEANINSTAGRAM_TB_URL, __FILE__, array( 
-			'version' => '1.3',
+			'version' => '2.0',
 			'license' => $license_key,
 			'item_name' => EDD_BEANINSTAGRAM_NAME,
 			'author' 	=> 'ThemeBeans'
@@ -97,6 +97,28 @@ function edd_beaninstagram_plugin_updater()
 	);
 }
 add_action( 'admin_init', 'edd_beaninstagram_plugin_updater' );
+
+
+
+
+/*===================================================================*/
+/* ADD SETTINGS LINK TO PLUGINS PAGE
+/*===================================================================*/
+define( 'BEANINSTAGRAM_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+
+add_filter( 'plugin_action_links', 'beaninstagram_plugin_action_links', 10, 2 );
+
+function beaninstagram_plugin_action_links( $links, $file ) {
+	if ( $file != BEANINSTAGRAM_PLUGIN_BASENAME )
+		return $links;
+
+	$settings_link = '<a href="' . menu_page_url( 'bean-instagram', false ) . '">'
+		. esc_html( __( 'Settings', 'bean-instagram' ) ) . '</a>';
+
+	array_unshift( $links, $settings_link );
+
+	return $links;
+}
 
 
 

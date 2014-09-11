@@ -1,3 +1,11 @@
+SEP 11 2014 - Version 2.0
+<ul>
+<li>OAuth update</li>
+<li>Moved OAuth activation from widget to Settings > Bean Instagram</li>
+<li>Added "Settings" link on plugins.php</li>
+<li>Performance Improvements</li>
+</ul>
+
 APR 24 2014 - Version 1.3.1
 <ul>
 <li>Minor UI Adjustments for WP3.9</li>
