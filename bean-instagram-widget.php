@@ -527,8 +527,6 @@ function bean_instagram_admin_page($id)
 
 	printf( '<li>' . __( 'Once the page refreshes, click the new %1$s button.', 'bean' ) . '</li>', '<strong>' . __( 'Retrieve Access Token', 'bean' ) . '</strong>' );
 
-	printf( '<li>' . __( 'Once the page refreshes, click the new %1$s button.', 'bean' ) . '</li>', '<strong>' . __( 'Retrieve Access Token', 'bean' ) . '</strong>' );
-
 	/* translators: Click the "Save Changes" button below again. */
 
 	printf( '<li>' . __( 'Once directed to authorize the request, click the green <strong>Authorize</strong> button. When authorization is granted, this page will refresh.', 'bean' ) . '</li>', '<strong>' . __( 'Retrieve Access Token', 'bean' ) . '</strong>' );
