@@ -3,7 +3,7 @@
 Plugin Name: Bean Instagram
 Plugin URI: http://themebeans.com/plugins/bean-instagram
 Description: Enables an Instagram feed widget. You must register an <a href="http://instagram.com/developer/" target="_blank">Instagram App</a> to retrieve your client ID and secret. <a href="http://themebeans.com/tutorials/retrieving-your-instagram-id-secret/">Learn More</a>
-Version: 2.0
+Version: 2.1
 Author: ThemeBeans
 Author URI: http://themebeans.com
 */

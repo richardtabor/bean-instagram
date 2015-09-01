@@ -1,3 +1,8 @@
+SEP 1 2015 - Version 2.0.1
+<ul>
+<li>WP4.3 _construct update</li>
+</ul>
+
 SEP 11 2014 - Version 2.0
 <ul>
 <li>OAuth update</li>

@@ -1,32 +1,26 @@
 <?php
-/*===================================================================
+/**
+ * Widget Name: Bean Instagram Widget
+ */
 
-	Widget Name: Bean Instagram Widget
-	Widget URI: http://themebeans.com/
-	Description:  A widget that displays your most recent Instagram posts, your Instagram feed or your liked posts on Instagram with API v1
-	Author: ThemeBeans
-	Author URI: http://www.themebeans.com
-	Version: 1.0
+// Register widget
+add_action('widgets_init', create_function('', 'return register_widget("Bean_Instagram_Widget");'));
 
-/*===================================================================*/
-
-
-     // WIDGET CLASS
-	class widget_bean_instagram extends WP_Widget {
-
-	/*===================================================================*/
-	/*	WIDGET SETUP
-	/*===================================================================*/
-	public function __construct() {
+class Bean_Instagram_Widget extends WP_Widget 
+{
+	// Constructor
+	function __construct() {
 		parent::__construct(
-			'bean_instagram', // BASE ID
-			'Bean Instagram', // NAME
-			array( 'description' => __( 'Displays your Instagram feed.', 'bean' ), )
-			);
+			'bean_instagram', // Base ID
+			__( 'Bean Instagram', 'bean' ), // Name
+			array( 'description' => __( 'Displays your Instagram feed.', 'bean' ), ) // Args
+		);
 
-		if ( is_active_widget(false, false, $this->id_base) )
-			add_action( 'wp_head', array(&$this, 'load_widget_style') );
+		if ( is_active_widget(false, false, $this->id_base) ) {
+	        add_action( 'wp_head', array(&$this, 'load_widget_style') );
+	     } 
 	}
+
 
 	/*===================================================================*/
 	/*	LOAD WIDGET STYLE DEPENDING ON THE THEME ( OR DEFAULT IF NO ASSOCIATED STYLE WAS FOUND )
@@ -346,13 +340,6 @@ function my_sidebar_admin_setup() {
 	}
 
 }
-
-// REGISTER WIDGET
-function register_ip_instagram_widget(){
-	register_widget('widget_bean_instagram');
-}
-add_action('init', 'register_ip_instagram_widget', 1);
-add_action( 'sidebar_admin_setup', 'my_sidebar_admin_setup' );
 
 
 
